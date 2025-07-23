@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Spin to Win: Vin's Big Birthday Bet</title>
+  <title>🎰 Spin to Win: Vin's Big Birthday Bet 🎰</title>
   <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
   <style>
     body {
@@ -16,6 +15,7 @@
     }
     h1 {
       font-size: 3rem;
+      margin-bottom: 10px;
     }
     .slot-container {
       display: flex;
@@ -34,10 +34,11 @@
       100% { transform: scale(1); }
     }
     #result {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       margin-top: 20px;
       color: yellow;
       min-height: 60px;
+      white-space: pre-line;
     }
     #share-message {
       font-size: 1.2rem;
@@ -77,41 +78,72 @@
   <img id="vin-image" src="vin-vegas.png" alt="Welcome to Vin Vegas" />
 
   <script>
-    const symbols = ["📬", "👔", "💼", "📄", "🍕"];
-    const prizes = {
-      "👔👔👔": "🎉 JACKPOT: VIN’S PROXY – Acting COO status: unlocked. Your reign lasts one hour. Please don't break anything.",
-      "👔👔": "🎉 WINNER: TASKMASTER PASS – Hand off one annoying task today. Doesn't matter if it’s minor - just point and assign like a true boss.",
-      "📬📬": "🎉 WINNER: INBOX IMMUNITY – No one can assign you new tasks for 1 hour.",
-      "📄📄": "🎉 WINNER: SOURCING STRATEGIST SUPREME – Your moment has come. Pitch one wild sourcing idea to Rob - no idea too bold, too weird, or too likely to accidentally work.",
-      "💼💼": "🎉 WINNER: THE GREAT TRADE – Swap one task with anyone on the team.",
-      "🍕🍕": "🎉 WINNER: TEAMS CHAT SHOUTOUT STAR – You get a mandatory team-wide public praise post."
+    const symbols = ["📬", "👔", "💼", "📄", "🍕", "👔", "📬", "🍕", "💼", "📄"];
+
+    const jackpotPrize = {
+      title: "🎉 JACKPOT: VIN’S PROXY",
+      detail: "You're the acting C.O.O. for 1 hour.\n(Please don't break anything.)"
     };
 
+    const twoMatchPrizePool = [
+      {
+        title: "🎉 WINNER: TASKMASTER PASS",
+        detail: "Delegate one small task to anyone today — your call."
+      },
+      {
+        title: "🎉 WINNER: INBOX IMMUNITY",
+        detail: "No one can assign you new tasks for 1 hour. Breathe easy."
+      },
+      {
+        title: "🎉 WINNER: SOURCING STRATEGIST SUPREME",
+        detail: "Pitch a wild sourcing idea to Rob — and watch him try to process it."
+      },
+      {
+        title: "🎉 WINNER: THE GREAT TRADE",
+        detail: "Choose a coworker. Trade one task. No takebacks."
+      },
+      {
+        title: "🎉 WINNER: TEAMS CHAT SHOUTOUT STAR",
+        detail: "You get mandatory team-wide praise in the group chat. Gloat freely."
+      },
+      {
+        title: "🎉 WINNER: 5-MIN PASS",
+        detail: "Use it to stretch, snack, or vibe. Clock starts now."
+      },
+      {
+        title: "🎉 WINNER: MESSAGE SHIELD",
+        detail: "You're officially protected from “Hey, quick question…” messages for the next hour."
+      }
+    ];
+
     function spinSlots() {
-      let slots = [document.getElementById("slot1"), document.getElementById("slot2"), document.getElementById("slot3")];
-      let results = [];
+      const slots = [document.getElementById("slot1"), document.getElementById("slot2"), document.getElementById("slot3")];
+      const results = [];
+
       for (let i = 0; i < 3; i++) {
         let symbol = symbols[Math.floor(Math.random() * symbols.length)];
         slots[i].textContent = symbol;
         results.push(symbol);
       }
 
-      let resultText = "❌ You lost – no win this time. Better luck next year.";
+      let resultText = "❌ YOU LOST\nNo prize this time. But you looked cool spinning!";
       let shareText = "";
 
       const counts = {};
       results.forEach(r => counts[r] = (counts[r] || 0) + 1);
+
       for (const symbol in counts) {
         if (counts[symbol] === 3 && symbol === "👔") {
-          resultText = prizes["👔👔👔"];
-          shareText = "Don’t forget to brag a little – let the team know you hit the jackpot!";
-        } else if (counts[symbol] === 2) {
-          const key = symbol + symbol;
-          if (prizes[key]) {
-            resultText = prizes[key];
-            shareText = "You earned it – go share your win with the team!";
-          }
+          resultText = `${jackpotPrize.title}\n\n${jackpotPrize.detail}`;
+          shareText = "💬 Share your big win with the team!";
+          break;
         }
+      }
+
+      if (!resultText.includes("JACKPOT") && Object.values(counts).includes(2)) {
+        const randomPrize = twoMatchPrizePool[Math.floor(Math.random() * twoMatchPrizePool.length)];
+        resultText = `${randomPrize.title}\n\n${randomPrize.detail}`;
+        shareText = "💬 Let the team know what you won!";
       }
 
       document.getElementById("result").textContent = resultText;
