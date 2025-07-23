@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spin to Win: Vin's Big Birthday Bet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: gold;
+      font-family: 'Luckiest Guy', cursive;
+      text-align: center;
+      padding-top: 40px;
+    }
+    h1 {
+      font-size: 3rem;
+    }
+    .slot-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 40px 0;
+    }
+    .slot {
+      font-size: 5rem;
+      margin: 0 15px;
+      animation: spin 0.5s ease-in-out;
+    }
+    @keyframes spin {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+    #result {
+      font-size: 1.6rem;
+      margin-top: 20px;
+      color: yellow;
+      min-height: 60px;
+    }
+    #share-message {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: white;
+    }
+    #spin-btn {
+      padding: 15px 30px;
+      font-size: 1.3rem;
+      background-color: gold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Luckiest Guy', cursive;
+    }
+    #spin-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    #vin-image {
+      margin-top: 40px;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎰 Spin to Win: Vin's Big Birthday Bet 🎰</h1>
+  <div class="slot-container">
+    <div class="slot" id="slot1">❓</div>
+    <div class="slot" id="slot2">❓</div>
+    <div class="slot" id="slot3">❓</div>
+  </div>
+  <div id="result"></div>
+  <div id="share-message"></div>
+  <button id="spin-btn" onclick="spinSlots()">🎲 Spin</button>
+  <br />
+  <img id="vin-image" src="vin-vegas.png" alt="Welcome to Vin Vegas" />
+
+  <script>
+    const symbols = ["📬", "👔", "💼", "📄", "🍕"];
+    const prizes = {
+      "👔👔👔": "🎉 WINNER: VIN’S PROXY – You’re the acting COO for 1 hour. (Disclaimer: Still no actual power.)",
+      "👔👔": "🎉 WINNER: TASKMASTER PASS – Delegate one small task to someone else today.",
+      "📬📬": "🎉 WINNER: INBOX IMMUNITY – No one can assign you new tasks for 1 hour.",
+      "📄📄": "🎉 WINNER: SOURCING STRATEGIST SUPREME – Pitch one wild idea to Christine.",
+      "💼💼": "🎉 WINNER: THE GREAT TRADE – Swap one task with anyone on the team.",
+      "🍕🍕": "🎉 WINNER: TEAMS CHAT SHOUTOUT STAR – You get a mandatory team-wide public praise post."
+    };
+
+    function spinSlots() {
+      let slots = [document.getElementById("slot1"), document.getElementById("slot2"), document.getElementById("slot3")];
+      let results = [];
+      for (let i = 0; i < 3; i++) {
+        let symbol = symbols[Math.floor(Math.random() * symbols.length)];
+        slots[i].textContent = symbol;
+        results.push(symbol);
+      }
+
+      let resultText = "❌ You lost – no win this time. Better luck next birthday.";
+      let shareText = "";
+
+      const counts = {};
+      results.forEach(r => counts[r] = (counts[r] || 0) + 1);
+      for (const symbol in counts) {
+        if (counts[symbol] === 3 && symbol === "👔") {
+          resultText = prizes["👔👔👔"];
+          shareText = "Don’t forget to brag a little – let the team know you hit the jackpot!";
+        } else if (counts[symbol] === 2) {
+          const key = symbol + symbol;
+          if (prizes[key]) {
+            resultText = prizes[key];
+            shareText = "You earned it – go share your win with the team!";
+          }
+        }
+      }
+
+      document.getElementById("result").textContent = resultText;
+      document.getElementById("share-message").textContent = shareText;
+      document.getElementById("spin-btn").disabled = true;
+    }
+  </script>
+</body>
+</html>
